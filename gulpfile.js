@@ -61,6 +61,7 @@
       'src/scripts/Background.js',
       'src/scripts/Filters.js',
       'src/scripts/Filesystem.js',
+      'src/scripts/ImageGallery.js',
       'src/scripts/ImageProcessor.js',
       'src/scripts/Main.js'
     ],

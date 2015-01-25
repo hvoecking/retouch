@@ -9,6 +9,8 @@
 
 /*global Filesystem:false */
 /*global ImageProcessor:false */
+/*global ImageGallery:false */
+
 /*global launchData:false */
 
 (function () {
@@ -17,12 +19,16 @@
   var
     chooseFileButton = document.querySelector('#choose_file'),
     saveFileAsButton = document.querySelector('#save_file_as'),
+    chooseDirectoryButton = document.querySelector('#choose_directory'),
+    previousButton = document.querySelector('#previous_file'),
+    nextButton = document.querySelector('#next_file'),
     discardButton = document.querySelector('#discard'),
     acceptButton = document.querySelector('#accept'),
     undoButton = document.querySelector('#undo'),
     redoButton = document.querySelector('#redo'),
     output = document.querySelector('output'),
-    processor = null;
+    processor = null,
+    gallery = null;
 
   function displayText(err, message) {
     var args, result;
@@ -34,6 +40,11 @@
     }
     result.concat(args);
     output.textContent = Array.apply(null, result).join(' ');
+  }
+
+  function displayImageFile(file, message) {
+    var onLoad = uiProgress(message + ' ' + (file && file.fullPath), updateInterface);
+    processor = new ImageProcessor(file, onLoad);
   }
 
   function uiProgress(message, cb) {
@@ -60,12 +71,14 @@
 
   function updateInterface(err, message, cb) {
     displayText(err, message);
+    nextButton.disabled = !gallery;
+    previousButton.disabled = !gallery;
     saveFileAsButton.disabled = !processor;
-    acceptButton.disabled = !processor.canAccept();
-    discardButton.disabled = !processor.canAccept();
-    undoButton.disabled = !processor.canUndo();
-    redoButton.disabled = !processor.canRedo();
-    processor.render(cb);
+    acceptButton.disabled = !(processor && processor.canAccept());
+    discardButton.disabled = !(processor && processor.canAccept());
+    undoButton.disabled = !(processor && processor.canUndo());
+    redoButton.disabled = !(processor && processor.canRedo());
+    processor && processor.render(cb);
   }
 
   function selectPresetFilter(el) {
@@ -113,6 +126,16 @@
     updateInterface(null, 'redo');
   });
 
+  nextButton.addEventListener('click', function () {
+    console.assert(gallery);
+    displayImageFile(gallery.next(), 'next');
+  });
+
+  previousButton.addEventListener('click', function () {
+    console.assert(gallery);
+    displayImageFile(gallery.previous(), 'previous');
+  });
+
   saveFileAsButton.addEventListener('click', function () {
     processor.store(null, function (err) {
       console.log(arguments);
@@ -125,27 +148,50 @@
   });
 
   chooseFileButton.addEventListener('click', function () {
-    // TODO: Load from manifest
-    var onLoad = uiProgress('choosing file', updateInterface);
-    processor = new ImageProcessor(null, onLoad);
+    // TODO: Load accepts from manifest and pass on
+    displayImageFile(null, 'choosing file')
   });
 
-  function loadInitialFile(launchData) {
-    var onLoad = uiProgress('loading initial file', updateInterface);
-    if (launchData && launchData.items && launchData.items[0]) {
-      processor = new ImageProcessor(launchData.items[0].entry, onLoad);
-    } else {
-      Filesystem.loadFromLocalStorage(function (err, entry) {
-        if (err) { return displayText(err, 'loading initial file'); }
-        if (entry) {
-          processor = new ImageProcessor(entry, onLoad);
-        }
+  chooseDirectoryButton.addEventListener('click', function () {
+    Filesystem.userOpenDir(function (err, entry) {
+      gallery = new ImageGallery(entry, function(err) {
+        if (err) { displayText(err, 'opening gallery file'); }
+        displayImageFile(gallery.current(), 'opening gallery file');
       });
-    }
+    });
+  });
+
+  function loadInitialFile(cb) {
+    var
+      start, initGallery, initProcessor;
+
+    start = function () {
+      Filesystem.gather(Filesystem.DIR, initGallery);
+    };
+
+    initGallery = function (err, dir) {
+      if (err) { return cb(err, dir); }
+      if (dir) {
+        gallery = new ImageGallery(dir, initProcessor);
+      } else {
+        Filesystem.gather(Filesystem.FILE, initProcessor);
+      }
+    };
+
+    initProcessor = function (err, file) {
+      if (err) { return cb(err); }
+      if (file) {
+        processor = new ImageProcessor(file, cb);
+      } else {
+        cb('No file');
+      }
+    };
+
+    start();
   }
 
   displayText(null, 'loading retouch');
 
-  loadInitialFile(launchData);
+  loadInitialFile(uiProgress('loading initial image', updateInterface));
 
 }());

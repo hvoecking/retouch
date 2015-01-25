@@ -11,9 +11,73 @@ var Filesystem = {};
   Filesystem.DIR = 'dir';
   Filesystem.FILE = 'file';
 
+  Filesystem.listDir = function (root, cb) {
+    Filesystem._listDir(root, null, 0, function (err, listing) {
+      if (err) { return cb(err); }
+      cb(null, listing);
+    });
+  };
+
+  Filesystem._listDir = function (root, listing, depth, cb) {
+    var
+      reader, entries, offset, descentCount,
+      start, init, more, process, push, onError;
+
+    descentCount = 1;
+    listing = listing || [];
+    reader = root.createReader();
+
+    start = function () {
+      more = reader.readEntries.bind(reader, init, onError);
+      more();
+    };
+
+    init = function (nextEntries) {
+      entries = nextEntries;
+      if (entries.length === 0) {
+        descentCount -= 1;
+        return (depth !== 0 || descentCount === 0) && cb(null, listing);
+      }
+      process(0);
+    };
+
+    process = function (current) {
+      offset = current;
+      _.each(entries.slice(offset), push);
+      more();
+    };
+
+    push = function (ent, i) {
+      listing.push(ent);
+      if (ent.isDirectory) {
+        var onDescent = process.bind(null, entries, offset + i + 1);
+        descentCount += 1;
+        return Filesystem._listDir(ent, listing, depth + 1, onDescent);
+      }
+    };
+
+    onError = function () {
+      console.error('error reading directory:', arguments);
+    };
+
+    start();
+  };
+
+  Filesystem.copy = function (root, srcFile, targetPath, cb) {
+    var path, name;
+    path = targetPath.split('/');
+    name = path.pop();
+
+    Filesystem.createDir(root, path, function (dir) {
+      srcFile.copyTo(dir, name, function (entry) {
+        cb(null, entry);
+      }, cb);
+    });
+  };
+
   Filesystem.open = function (entry, cb) {
-    Filesystem.storeToLocalStorage(entry);
     entry.file(function (file) {
+      Filesystem.retain(Filesystem.FILE, entry);
       cb(null, file, entry);
     });
   };
@@ -75,32 +139,47 @@ var Filesystem = {};
     start();
   };
 
-  Filesystem.storeToLocalStorage = function (entry) {
+  Filesystem.retain = function (name, entry) {
+    var obj = {};
+    obj[name] = entry && chrome.fileSystem.retainEntry(entry);
     try { // TODO remove try once retain is in stable.
-      chrome.storage.local.set({
-        'chosenFile': chrome.fileSystem.retainEntry(entry)
-      });
-    } catch (ignore) {}
+      chrome.storage.local.set(obj);
+    } catch (e) {
+      console.err('Exception on storing entry', e);
+    }
   };
-
-  Filesystem.loadFromLocalStorage = function (cb) {
-    chrome.storage.local.get('chosenFile', function (items) {
-      if (items.chosenFile) {
-        chrome.fileSystem.restoreEntry(items.chosenFile, function (file) {
-          cb(null, file);
+  Filesystem.gather = function (name, cb) {
+    chrome.storage.local.get(name, function (obj) {
+      if (obj[name]) {
+        chrome.fileSystem.restoreEntry(obj[name], function (entry) {
+          cb(null, entry);
         });
+      } else {
+        cb();
       }
     });
   };
 
-  Filesystem.userOpen = function (cb, accepts) {
+  Filesystem.userOpenDir = function (cb) {
+    chrome.fileSystem.chooseEntry({type: 'openDirectory'}, function (entry) {
+      if (!entry) {
+        return cb('Directory is not accessible');
+      }
+      if (!entry.isDirectory) {
+        return cb('Expected directory, but got ' + JSON.stringify(entry));
+      }
+      Filesystem.retain(Filesystem.FILE, null);
+      Filesystem.retain(Filesystem.DIR, entry);
+      cb(null, entry);
+    });
+  };
+
+  Filesystem.userOpen = function (cb) {
     chrome.fileSystem.chooseEntry(
-      {type: 'openFile', accepts: accepts},
+      {type: 'openFile', accepts: null},
       function (entry) {
-        if (!entry) {
-          displayText('No file selected.');
-          return;
-        }
+        if (!entry) { return cb('No file selected.'); }
+        Filesystem.retain(Filesystem.DIR, null);
         Filesystem.open(entry, cb);
       }
     );

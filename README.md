@@ -33,7 +33,7 @@ Open chrome, go to [extensions](chrome://extensions), tick `Developer mode` clic
   - [ ] Restyle filters, use tabs or something simialar
 - [ ] Keyboard shortcuts
 - [ ] Directory mode
-  - [ ] Open directories and step through images
+  - [x] Open directories and step through images
   - [ ] Save original as backup
   - [ ] Save applied changes in exif data
   - [ ] Sort by Name, File date, exif date, type, size, etc...
