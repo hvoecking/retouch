@@ -1,0 +1,38 @@
+{
+  "name": "retouch",
+  "version": "0.0.0",
+  "authors": [
+    "Heye Vöcking <heye.voecking+retouch@gmail.com>"
+  ],
+  "description": "A tool to crop, straighten, and retouch images.",
+  "main": "index.html",
+  "keywords": [
+    "retouch",
+    "chrome",
+    "app",
+    "ergonomic",
+    "image",
+    "photo",
+    "picture",
+    "jpg",
+    "jpeg",
+    "editor"
+  ],
+  "license": "BSD-style",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "chrome-app-livereload": "bestander/chrome-app-livereload#~0.0.5"
+  },
+  "dependencies": {
+    "caman": "~4.1.2",
+    "fileapi": "~2.0.9",
+    "lodash": "3.0.0"
+  }
+}

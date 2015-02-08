@@ -3,8 +3,26 @@ Development in progress, the status is still pre beta, see [todos](https://githu
 # Retouch - Ergonomic Image Editor
 A tool to efficiently crop, straighten, and retouch images.
 
+Open files, perform a simple modifications and save the result.
+
+Works offline.
+
+# Install
+The buildprocess is managed by gulp.
+To install it without installing packages globally do:
+
+```
+git clone https://github.com/hvoecking/retouch.git
+cd retouch
+npm install
+node node_modules/bower/bin/bower.js install
+node node_modules/gulp/bin/gulp.js watch --build test
+```
+The app can only properly run as a chrome extension.
+Open chrome, go to [extensions](chrome://extensions), tick `Developer mode` click `Load unpacked extension` select `retouch/dist` directory and enjoy auto reload.
+
 # TODO:
-- [ ] Basic image reading, displaying, writing
+- [x] Basic image reading, displaying, writing
 - [ ] Save as jpeg with compression
 - [ ] Add crop functionality
 - [ ] Add straighten functionality

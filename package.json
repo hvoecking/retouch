@@ -1,0 +1,71 @@
+{
+  "name": "retouch",
+  "version": "0.0.0",
+  "description": "A tool to efficiently crop, straighten, and retouch images.",
+  "main": "index.html",
+  "dependencies": {},
+  "devDependencies": {
+    "bower": "^1.3.12",
+    "chai": "^1.10.0",
+    "gulp": "^3.8.10",
+    "gulp-autoprefixer": "^2.1.0",
+    "gulp-cache": "^0.2.4",
+    "gulp-concat": "^2.4.3",
+    "gulp-expect-file": "0.0.7",
+    "gulp-if": "^1.2.5",
+    "gulp-ignore": "^1.2.1",
+    "gulp-imagemin": "^2.1.0",
+    "gulp-inject": "^1.1.1",
+    "gulp-jshint": "^1.9.0",
+    "gulp-jslint": "^0.2.2",
+    "gulp-minify-css": "^0.4.3",
+    "gulp-notify": "^2.1.0",
+    "gulp-rename": "^1.2.0",
+    "gulp-rimraf": "^0.1.1",
+    "gulp-sass": "^1.3.2",
+    "gulp-size": "^1.2.0",
+    "gulp-uglify": "^1.1.0",
+    "jslint": "^0.7.2",
+    "lodash": "^2.4.1",
+    "minimist": "^1.1.0",
+    "mocha": "^2.1.0",
+    "phantomjs": "^1.9.15",
+    "projectz": "^0.3.17",
+    "sinon": "^1.12.2",
+    "sinon-chrome": "^0.1.1",
+    "tiny-lr": "^0.1.4"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hvoecking/retouch.git"
+  },
+  "keywords": [
+    "retouch",
+    "chrome",
+    "app",
+    "ergonomic",
+    "image",
+    "photo",
+    "picture",
+    "jpg",
+    "jpeg",
+    "editor"
+  ],
+  "author": "Heye Vöcking <heye.voecking+retouch@gmail.com>",
+  "license": {
+    "type": "BSD"
+  },
+  "bugs": {
+    "url": "https://github.com/hvoecking/retouch/issues"
+  },
+  "homepage": "https://github.com/hvoecking/retouch",
+  "maintainers": [
+    "Heye Vöcking <heye.voecking+retouch@gmail.com>"
+  ],
+  "contributors": [
+    "hvoecking (https://github.com/hvoecking)"
+  ]
+}
