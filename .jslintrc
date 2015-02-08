@@ -1,0 +1,68 @@
+{
+  "// From https://gist.github.com/irae/2764095": "",
+
+  "/*** Globals ***/": "",
+  "// To ignore any custom global variables, enable the `predef` option and list": "",
+  "// your variables within it.": "",
+  "predef": [
+    "ArrayBuffer",
+    "atob",
+    "Blob",
+    "console",
+    "Buffer",
+    "process",
+    "Uint8Array",
+
+    "document",
+
+    "chrome"
+  ],
+
+  "/*** Enforcing options ***/": "",
+  "// Set these to `true` to enforce, or `false` to relax.": "",
+  "adsafe": false,
+  "safe": false,
+
+  "/*** Relaxing options ***/": "",
+  "// Set these to `true` to relax, or `false` to enforce.": "",
+  "bitwise": false,
+  "cap": false,
+  "confusion": false,
+  "continue": false,
+  "css": false,
+  "debug": false,
+  "eqeq": false,
+  "es5": false,
+  "evil": false,
+  "forin": false,
+  "fragment": false,
+  "newcap": true,
+  "nomen": true, "// For lodash (_) and private fields": "",
+  "on": false,
+  "plusplus": false,
+  "regexp": false,
+  "sloppy": false,
+  "sub": false,
+  "undef": false,
+  "unparam": false,
+  "vars": false,
+  "white": false,
+  "validthis": false,
+  "strict_mode": false,
+  "todo": true, "// devel does not allow todos, so we do it here": "",
+
+  "/*** Environments ***/": "",
+  "// Set each environment that you're using to `true`.": "",
+  "browser": true,
+  "devel": false,
+  "node": false,
+  "rhino": false,
+  "widget": false,
+  "windows": false,
+
+  "/*** Miscellaneous ***/": "",
+  "indent": 2,
+  "maxerr": 50,
+  "// maxlen": 80,
+  "passfail": true
+}
