@@ -6,8 +6,56 @@
   <!-- endinject -->
 </head>
 <body>
+  <nav>
+    <button id="choose_file" enabled>Open...</button>
+    <button id="save_file_as" disabled>Save As...</button>
+    <button id="discard" disabled>Discard</button>
+    <button id="accept" disabled>Accept</button>
+    <button id="undo" disabled>Undo</button>
+    <button id="redo" disabled>Redo</button>
+  </nav>
 
   <output>Loading...</output>
+
+  <div id="output_div" style="display: none; padding: 10px 20px 40px;">
+
+    <div id="output_canvas" style="text-align: center; margin: 0 auto;">
+        <div class="loader"></div>
+    </div>
+
+    <div id="PresetFilters">
+      <a data-preset="nofilter" class="Active">#nofilter</a>
+      <a data-preset="1977">1977</a>
+      <a data-preset="brannan">Brannan</a>
+      <a data-preset="lordkelvin">Lord Kelvin</a>
+      <a data-preset="nashville">Nashville</a>
+      <a data-preset="gotham">Gotham</a>
+      <a data-preset="hefe">Hefe</a>
+      <a data-preset="xpro">X-PRO II</a>
+      <a data-preset="vintage" class="">Vintage</a>
+      <a data-preset="lomo" class="">Lomo</a>
+      <a data-preset="clarity">Clarity</a>
+      <a data-preset="sinCity" class="">Sin City</a>
+      <a data-preset="sunrise">Sunrise</a>
+      <a data-preset="crossProcess" class="">Cross Process</a>
+      <a data-preset="orangePeel">Orange Peel</a>
+      <a data-preset="love">Love</a>
+      <a data-preset="grungy">Grungy</a>
+      <a data-preset="jarques">Jarques</a>
+      <a data-preset="pinhole" class="">Pinhole</a>
+      <a data-preset="oldBoot" class="">Old Boot</a>
+      <a data-preset="glowingSun">Glowing Sun</a>
+      <a data-preset="hazyDays" class="">Hazy Days</a>
+      <a data-preset="herMajesty" class="">Her Majesty</a>
+      <a data-preset="nostalgia">Nostalgia</a>
+      <a data-preset="hemingway" class="">Hemingway</a>
+      <a data-preset="concentrate" class="">Concentrate</a>
+      <a data-preset="greyscale" class="">Greyscale</a>
+      <a data-preset="invert" class="">Invert</a>
+      <a data-preset="emboss" class="">Emboss</a>
+      <a data-preset="boxBlur" class="">Box Blur</a>
+    </div>
+  </div>
 
   <!-- inject:js -->
   <!-- endinject -->

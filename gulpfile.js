@@ -51,10 +51,17 @@
     ],
 
     plugin_files = [
+      'src/bower_components/lodash/lodash.js',
+      'src/bower_components/caman/dist/caman.full.js',
+      'src/bower_components/fileapi/dist/FileAPI.js',
+      'src/thirdparty/instagram.js'
     ],
 
     script_files = [
       'src/scripts/Background.js',
+      'src/scripts/Filters.js',
+      'src/scripts/Filesystem.js',
+      'src/scripts/ImageProcessor.js',
       'src/scripts/Main.js'
     ],
 
@@ -134,6 +141,15 @@
       .pipe(notify({ message: 'Plugins task complete' }));
   });
 
+  // Images
+  gulp.task('images', function () {
+    return gulp.src('src/images/**/*')
+      .pipe(expectFile.real('src/images/**/*'))
+      .pipe(cache(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true })))
+      .pipe(gulp.dest(targetDir + '/images'))
+      .pipe(notify({ message: 'Asset task complete' }));
+  });
+
   // Other files
   gulp.task('reminent', function () {
     return gulp.src(reminent_files)
@@ -144,7 +160,7 @@
   });
 
   // After all minification is done we can inject the newly created files into the html
-  gulp.task('index', ['css', 'styles', 'plugins', 'scripts', 'reminent'], function () {
+  gulp.task('index', ['css', 'styles', 'plugins', 'scripts', 'reminent', 'images'], function () {
     // We src all files under dist, where the plugins directory has precedence
     var srcFiles, dstFiles;
     srcFiles = [];
@@ -190,6 +206,9 @@
 
     // Watch .js files
     gulp.watch(script_files, ['scripts']);
+
+    // Watch images
+    gulp.watch('src/images/**/*', ['images']);
 
     // Watch other file
     gulp.watch(reminent_files, ['reminent']);

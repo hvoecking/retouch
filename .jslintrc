@@ -13,10 +13,7 @@
     "atob",
     "ArrayBuffer",
     "Uint8Array",
-    "Blob",
-    "FileAPI",
-    "Caman",
-    "launchData"
+    "Blob"
   ],
 
   "/*** Enforcing options ***/": "",

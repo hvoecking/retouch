@@ -1,6 +1,6 @@
 {
   "name": "Retouch - Simple Image Editor",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "manifest_version": 2,
   "minimum_chrome_version": "28",
   "description": "A tool to crop, straighten, and retouch images.",
@@ -8,6 +8,20 @@
   "app": {
     "background": {
       "scripts": ["scripts/Background.js"]
+    }
+  },
+  "permissions": [
+    {"fileSystem": ["directory", "write", "retainEntries"]},
+    "storage"
+  ],
+  "file_handlers": {
+    "image": {
+      "types": [
+        "image/png",
+        "image/jpeg",
+        "image/jpg",
+        "image/tif"
+      ]
     }
   }
 }
