@@ -5,8 +5,8 @@
   # Project slug name
   name: "retouch"
 
-  version: "0.0.1"
-  version_name: "alpha"
+  version: "0.1.0"
+  version_name: "alpha-dev"
 
   # Project's homepage URL
   # If `repo`, `repository`, or `demo` is set, we set this automatically
