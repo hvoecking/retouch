@@ -1,45 +1,25 @@
 // Copyright (c) 2015 Heye Vöcking
 
-/*global _:false */
-/*global chai:false */
-/*global mocha:false */
-/*global describe:false */
-/*global it:false */
 /*global sinon:false */
-/*global beforeEach:false */
-/*global afterEach:false */
-/*global displayText:false */
-/*global Main:false */
+/*global it:false */
 
-(function () {
+/*global RETOUCH:false */
+
+var TEST = (function (parent, retouch) {
   'use strict';
 
-  var expect = chai.expect;
-  mocha.setup('bdd');
+  parent.TestMain = function () {
+    it('should install all listeners', function () {
+      var
+        mockQuerySelector = parent.sandbox.stub(document, 'querySelector');
 
-  describe('Main.js', function () {
-    var sandbox;
+      mockQuerySelector.withArgs('output').returns({});
 
-    beforeEach(function () {
-      // create a sandbox
-      sandbox = sinon.sandbox.create();
+      retouch.Main.initialize();
 
-      // stub some console methods
-      sandbox.stub(window.console, 'log');
-      sandbox.stub(window.console, 'error');
+      sinon.assert.calledOnce(mockQuerySelector);
     });
+  };
 
-    afterEach(function () {
-      // restore the environment as it was before
-      sandbox.restore();
-    });
-
-    describe('select.output', function () {
-      it('should get output area', function () {
-        sinon.assert.calledOnce(document.querySelector);
-      });
-    });
-  });
-
-  mocha.run();
-}());
+  return parent;
+}(TEST || {}, RETOUCH));

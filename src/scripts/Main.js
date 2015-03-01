@@ -1,9 +1,11 @@
 // Copyright (c) 2015 Heye Vöcking
 
-(function () {
+var RETOUCH = (function (parent) {
   'use strict';
 
-  var output = document.querySelector('output');
+  var
+    Main = parent.Main = {},
+    output = document.querySelector('output');
 
   function displayText(err, message) {
     var args, result;
@@ -17,6 +19,11 @@
     output.textContent = Array.apply(null, result).join(' ');
   }
 
-  displayText(null, 'loading retouch');
+  Main.initialize = function () {
+    output = document.querySelector('output');
 
-}());
+    displayText(null, 'initializing');
+  };
+
+  return parent;
+}(RETOUCH || {}));

@@ -59,17 +59,19 @@
       'src/scripts/Main.js'
     ],
 
+    script_start_file = 'src/scripts/Start.js',
+
+    test_script_start_file = 'test/StartTests.js',
+
     test_plugin_files = [
       'node_modules/chai/chai.js',
       'node_modules/mocha/mocha.js',
-      'node_modules/sinon/pkg/sinon.js'
+      'node_modules/sinon/pkg/sinon.js',
+      'node_modules/sinon-chrome/chrome.js',
+      'src/bower_components/lodash/lodash.js'
     ],
 
-    test_before_files = [
-      'test/InstallMocks.js'
-    ],
-
-    test_after_files = [
+    test_script_files = [
       'test/TestMain.js'
     ],
 
@@ -82,19 +84,15 @@
     ];
 
   if (testBuild) {
-    plugin_files = [].concat(
-      plugin_files,
-      test_plugin_files
-    );
+    plugin_files = test_plugin_files;
     script_files = [].concat(
-      test_before_files,
       script_files,
-      test_after_files
+      test_script_files
     );
-    css_files = [].concat(
-      css_files,
-      test_css_files
-    );
+    script_files.push(test_script_start_file);
+    css_files = test_css_files;
+  } else {
+    script_files.push(script_start_file);
   }
 
   // Clear the cache
@@ -122,15 +120,18 @@
       manifest_version: 2,
       minimum_chrome_version: '28',
       offline_enabled: true,
+      "sandbox": (
+        testBuild && {"pages": ["index.html"]}
+      ) || undefined,
       app: {
         background: {
           scripts: [(
-              testBuild && 'scripts/Background.js'
-            ) || (
-              debugBuild && 'scripts/Background.js'
-            ) || (
-              releaseBuild && 'scripts/main.js'
-            )],
+            testBuild && 'scripts/Background.js'
+          ) || (
+            debugBuild && 'scripts/Background.js'
+          ) || (
+            releaseBuild && 'scripts/main.js'
+          )],
           persistent: false
         }
       },
