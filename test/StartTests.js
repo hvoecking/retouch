@@ -24,7 +24,15 @@ var TEST = (function (parent) {
     parent.sandbox.restore();
   });
 
+  parent.dbg = {
+    printStack: function () {
+      console.log(new Error().stack);
+    }
+  };
+
   describe('Main', parent.TestMain);
+  describe('Filesystem', parent.TestFilesystem);
+  describe('ImageProcessor', parent.TestImageProcessor);
 
   mocha.run();
 

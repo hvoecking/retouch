@@ -17,6 +17,7 @@
     data = require('gulp-data'),
     gulp = require('gulp'),
     gulpif = require('gulp-if'),
+    imagemin = require('gulp-imagemin'),
     ignore = require('gulp-ignore'),
     inject = require('gulp-inject'),
     minifycss = require('gulp-minify-css'),
@@ -52,10 +53,17 @@
     ],
 
     plugin_files = [
+      'src/bower_components/lodash/lodash.js',
+      'src/bower_components/caman/dist/caman.full.js',
+      'src/bower_components/fileapi/dist/FileAPI.js',
+      'src/thirdparty/instagram.js'
     ],
 
     script_files = [
       'src/scripts/Background.js',
+      'src/scripts/Filters.js',
+      'src/scripts/Filesystem.js',
+      'src/scripts/ImageProcessor.js',
       'src/scripts/Main.js'
     ],
 
@@ -68,11 +76,14 @@
       'node_modules/mocha/mocha.js',
       'node_modules/sinon/pkg/sinon.js',
       'node_modules/sinon-chrome/chrome.js',
+//      'node_modules/sinon-chrome/phantom-tweaks.js',
       'src/bower_components/lodash/lodash.js'
     ],
 
     test_script_files = [
-      'test/TestMain.js'
+      'test/TestMain.js',
+      'test/TestFilesystem.js',
+      'test/TestImageProcessor.js'
     ],
 
     manifest_files = [
@@ -135,6 +146,13 @@
           persistent: false
         }
       },
+//      content_security_policy: (
+//        testBuild && 'script-src \'self\' \'unsafe-eval\'; object-src \'self\''
+//      ) || (
+//        debugBuild && 'script-src \'self\'; object-src \'self\''
+//      ) || (
+//        releaseBuild && 'script-src \'self\'; object-src \'self\''
+//      ),
       permissions: [
         {
           fileSystem: [
@@ -221,8 +239,17 @@
       .pipe(notify({ message: 'Livereload task complete' }));
   });
 
+  // Images
+  gulp.task('images', function () {
+    return gulp.src('src/images/**/*')
+      .pipe(expectFile.real('src/images/**/*'))
+      .pipe(cache(imagemin({ optimizationLevel: 3, progressive: true, interlaced: true })))
+      .pipe(gulp.dest(dest + '/images'))
+      .pipe(notify({ message: 'Image task complete' }));
+  });
+
   // After all minification is done we can inject the newly created files into the html
-  gulp.task('index', ['manifest', 'css', 'styles', 'plugins', 'scripts', 'livereload'], function () {
+  gulp.task('index', ['manifest', 'css', 'styles', 'plugins', 'scripts', 'livereload', 'images'], function () {
     // We src all files under dist, we have to inject them in the correct order
     // to not break dependencies. The order is specified the in the plugin and script
     // files arrays. The plugin files array must come first because the script files
@@ -248,7 +275,8 @@
         ignorePath: '/' + dest + '/' // ensures proper relative paths
       }))
       .pipe(inject(
-        gulp.src(dest + '/' + 'livereload.js', {read: false}), {
+        gulp.src(dest + '/' + 'livereload.js', {read: false}),
+        {
           starttag: '<!-- inject:livereload -->',
           transform: function () {
             return '<script src="livereload.js?host=localhost&port=35729"></script>';
@@ -282,12 +310,16 @@
     // Watch .js files
     gulp.watch(script_files, ['scripts']);
 
+    // Watch images
+    gulp.watch('src/images/**/*', ['images']);
+
     // Create LiveReload server
     var lr = tinylr();
     lr.listen(35729);
 
     // Watch every file intargetDir, reload on change
     gulp.watch([dest + '/**']).on('change', function (evt) {
+      console.log('reload');
       lr.changed({
         body: {
           files: [evt.path]

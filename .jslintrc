@@ -12,6 +12,7 @@
     "Buffer",
     "process",
     "Uint8Array",
+    "_",
 
     "document",
 
@@ -36,7 +37,7 @@
   "evil": false,
   "forin": false,
   "fragment": false,
-  "newcap": true,
+  "newcap": true, "// For Caman": "",
   "nomen": true, "// For lodash (_) and private fields": "",
   "on": false,
   "plusplus": false,
