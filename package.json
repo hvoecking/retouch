@@ -1,6 +1,6 @@
 {
   "name": "retouch",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "A tool to efficiently crop, straighten, and retouch images.",
   "main": "index.html",
   "dependencies": {},
