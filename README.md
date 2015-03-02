@@ -48,7 +48,7 @@ There are 3 build modi for gulp, next to the default `debug` mode you can call g
 The output files are then produced in their corresponding subdirectory of the `retouch/dist/` directory.
 
 # TODO:
-- [ ] Basic image reading, displaying, writing
+- [x] Basic image reading, displaying, writing
 - [ ] Save as jpeg with compression
 - [ ] Add crop functionality
 - [ ] Add straighten functionality

@@ -1,45 +1,41 @@
 // Copyright (c) 2015 Heye Vöcking
 
-/*global _:false */
-/*global chai:false */
-/*global mocha:false */
-/*global describe:false */
-/*global it:false */
 /*global sinon:false */
-/*global beforeEach:false */
-/*global afterEach:false */
-/*global displayText:false */
-/*global Main:false */
+/*global it:false */
 
-(function () {
+/*global RETOUCH:false */
+
+var TEST = (function (parent, retouch) {
   'use strict';
 
-  var expect = chai.expect;
-  mocha.setup('bdd');
+  parent.TestMain = function () {
+    it('should install all listeners', function () {
+      var
+        mockButton = {addEventListener: parent.sandbox.spy()},
+        mockQuerySelector = parent.sandbox.stub(document, 'querySelector');
 
-  describe('Main.js', function () {
-    var sandbox;
+      mockQuerySelector.withArgs('output').returns({});
+      mockQuerySelector.returns(mockButton);
+      retouch.FileAPI = {
+        event: {
+          on: parent.sandbox.spy()
+        }
+      };
 
-    beforeEach(function () {
-      // create a sandbox
-      sandbox = sinon.sandbox.create();
+      retouch.Main.initialize();
 
-      // stub some console methods
-      sandbox.stub(window.console, 'log');
-      sandbox.stub(window.console, 'error');
+      sinon.assert.calledWith(mockQuerySelector, '#choose_file');
+      sinon.assert.calledWith(mockQuerySelector, '#save_file_as');
+      sinon.assert.calledWith(mockQuerySelector, '#discard');
+      sinon.assert.calledWith(mockQuerySelector, '#accept');
+      sinon.assert.calledWith(mockQuerySelector, '#undo');
+      sinon.assert.calledWith(mockQuerySelector, '#redo');
+      sinon.assert.callCount(mockQuerySelector, 7);
+      sinon.assert.callCount(mockButton.addEventListener, 6);
+      sinon.assert.calledOnce(retouch.FileAPI.event.on);
+      sinon.assert.calledWith(retouch.FileAPI.event.on, sinon.match.same(retouch.PresetFilters));
     });
+  };
 
-    afterEach(function () {
-      // restore the environment as it was before
-      sandbox.restore();
-    });
-
-    describe('select.output', function () {
-      it('should get output area', function () {
-        sinon.assert.calledOnce(document.querySelector);
-      });
-    });
-  });
-
-  mocha.run();
-}());
+  return parent;
+}(TEST || {}, RETOUCH));
