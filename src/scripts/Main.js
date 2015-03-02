@@ -103,7 +103,6 @@ var RETOUCH = (function (parent) {
     saveFileAsButton = document.querySelector('#save_file_as');
     saveFileAsButton.addEventListener('click', function () {
       processor.store(null, function (err) {
-        console.log(arguments);
         if (err) {
           return displayText(err, 'storing file');
         }
@@ -138,10 +137,7 @@ var RETOUCH = (function (parent) {
   };
 
   Main.loadInitialFile = function (launchData) {
-    var onLoad = uiProgress('loading initial file', function () {
-      parent.dbg.printStack();
-      console.log('called with:', arguments);
-    });
+    var onLoad = uiProgress('loading initial file', displayText);
     if (launchData && launchData.items && launchData.items[0]) {
       processor = new parent.ImageProcessor(launchData.items[0].entry, onLoad);
     } else {
